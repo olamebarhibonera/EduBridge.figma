@@ -1,6 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import * as Linking from 'expo-linking';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabase';
+import { parseAuthTokensFromUrl, isAuthCallbackUrl } from '../utils/authDeepLink';
+import { navigateToMain } from '../navigation/navigationRef';
 import type { User } from '../types';
 
 interface AuthContextType {
@@ -21,10 +24,26 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
+async function handleAuthUrl(url: string | null): Promise<boolean> {
+  if (!isAuthCallbackUrl(url)) return false;
+  const tokens = parseAuthTokensFromUrl(url);
+  if (!tokens) return false;
+  try {
+    const { error } = await supabase.auth.setSession({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    });
+    return !error;
+  } catch {
+    return false;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const handledInitialUrl = useRef(false);
 
   const refreshSession = async () => {
     try {
@@ -51,14 +70,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
+      if (!handledInitialUrl.current) {
+        handledInitialUrl.current = true;
+        const initialUrl = await Linking.getInitialURL();
+        const handled = await handleAuthUrl(initialUrl);
+        if (handled) await refreshSession();
+      }
       await refreshSession();
       setLoading(false);
     };
     initAuth();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
+    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
       if (currentSession?.user) {
         setSession(currentSession);
         setUser({
@@ -72,7 +95,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setLoading(false);
     });
-    return () => subscription.unsubscribe();
+
+    const linkSub = Linking.addEventListener('url', async ({ url }) => {
+      const handled = await handleAuthUrl(url);
+      if (handled) {
+        await refreshSession();
+        navigateToMain();
+      }
+    });
+
+    return () => {
+      authSub.unsubscribe();
+      linkSub.remove();
+    };
   }, []);
 
   const signOut = async () => {

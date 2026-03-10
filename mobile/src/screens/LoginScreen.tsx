@@ -21,14 +21,25 @@ export function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     setError('');
+    setEmailNotConfirmed(false);
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
-        setError(signInError.message);
+        const msg = signInError.message;
+        // Supabase often returns "Invalid login credentials" for unconfirmed email (security)
+        const possiblyUnconfirmed =
+          /not confirmed|confirm your email|email not confirmed|invalid login credentials/i.test(msg);
+        setEmailNotConfirmed(possiblyUnconfirmed);
+        setError(
+          possiblyUnconfirmed && /invalid login credentials/i.test(msg)
+            ? 'Invalid login credentials. If you just signed up, check your email and tap the confirmation link first, then try again.'
+            : msg
+        );
         setLoading(false);
         return;
       }
@@ -39,6 +50,24 @@ export function LoginScreen() {
       setError(err?.message ?? 'An error occurred');
     }
     setLoading(false);
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email?.trim()) {
+      setError('Enter your email above first');
+      return;
+    }
+    setError('');
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: email.trim(),
+      });
+      if (resendError) setError(resendError.message);
+      else setError('Confirmation email sent. Check your inbox.');
+    } catch (err: any) {
+      setError(err?.message ?? 'Failed to resend');
+    }
   };
 
   const handleOAuth = async (provider: 'google' | 'facebook') => {
@@ -69,8 +98,15 @@ export function LoginScreen() {
         <View style={styles.card}>
           {error ? (
             <View style={styles.errorBox}>
-              <Ionicons name="alert-circle" size={20} color="#dc2626" />
-              <Text style={styles.errorText}>{error}</Text>
+              <Ionicons name="alert-circle" size={20} color="#dc2626" style={styles.errorIcon} />
+              <View style={styles.errorContent}>
+                <Text style={styles.errorText}>{error}</Text>
+                {emailNotConfirmed && (
+                  <Pressable onPress={handleResendConfirmation} style={styles.resendLink}>
+                    <Text style={styles.resendLinkText}>Resend confirmation email</Text>
+                  </Pressable>
+                )}
+              </View>
             </View>
           ) : null}
 
@@ -165,7 +201,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
-  errorText: { flex: 1, fontSize: 14, color: '#991b1b' },
+  errorIcon: { marginTop: 2 },
+  errorContent: { flex: 1 },
+  errorText: { fontSize: 14, color: '#991b1b' },
+  resendLink: { marginTop: 8 },
+  resendLinkText: { fontSize: 14, color: '#2563eb', fontWeight: '600' },
   label: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 },
   inputWrap: { position: 'relative', marginBottom: 16 },
   inputIcon: { position: 'absolute', left: 14, top: 14, zIndex: 1 },

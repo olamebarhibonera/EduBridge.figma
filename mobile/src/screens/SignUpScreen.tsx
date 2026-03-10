@@ -93,7 +93,7 @@ export function SignUpScreen() {
             country: formData.country,
             arrival_date: formData.arrivalDate,
           },
-          emailRedirectTo: 'edubridge://',
+          emailRedirectTo: 'edubridge://auth/callback',
         },
       });
       if (signUpError) {
@@ -124,6 +124,20 @@ export function SignUpScreen() {
     }
   };
 
+  const handleResendConfirmation = async () => {
+    setError('');
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: formData.email,
+      });
+      if (resendError) setError(resendError.message);
+      else setError(''); // optional: show "Email sent!" toast
+    } catch (err: any) {
+      setError(err?.message ?? 'Failed to resend');
+    }
+  };
+
   if (success) {
     return (
       <View style={[styles.container, { backgroundColor: colors.bgSecondary }]}>
@@ -131,10 +145,13 @@ export function SignUpScreen() {
           <Ionicons name="checkmark-circle" size={64} color="#16a34a" style={styles.successIcon} />
           <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Check Your Email!</Text>
           <Text style={[styles.successText, { color: colors.textSecondary }]}>
-            We've sent a confirmation email to {formData.email}
+            We've sent a confirmation email to {formData.email}. Click the link in the email to activate your account.
           </Text>
           <Pressable onPress={() => navigation.navigate('Login')} style={styles.primaryBtn}>
             <Text style={styles.primaryBtnText}>Go to Login</Text>
+          </Pressable>
+          <Pressable onPress={handleResendConfirmation} style={styles.resendBtn}>
+            <Text style={[styles.resendText, { color: colors.accent }]}>Resend confirmation email</Text>
           </Pressable>
         </View>
       </View>
@@ -265,4 +282,6 @@ const styles = StyleSheet.create({
   successIcon: { alignSelf: 'center', marginBottom: 16 },
   successTitle: { fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8 },
   successText: { fontSize: 14, textAlign: 'center', marginBottom: 24 },
+  resendBtn: { marginTop: 12 },
+  resendText: { fontSize: 14, fontWeight: '600' },
 });

@@ -1,30 +1,19 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { supabase } from '../utils/supabase';
+import { useAuth } from '../contexts';
+import { navigateToLogin, navigateToMain } from '../navigation/navigationRef';
 
 export function AuthCallbackScreen() {
-  const navigation = useNavigation<any>();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    const run = async () => {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          navigation.replace('Login');
-          return;
-        }
-        if (data.session) {
-          navigation.replace('MainTabs');
-        } else {
-          navigation.replace('Login');
-        }
-      } catch {
-        navigation.replace('Login');
-      }
-    };
-    run();
-  }, [navigation]);
+    if (loading) return;
+    if (user) {
+      navigateToMain();
+    } else {
+      navigateToLogin();
+    }
+  }, [user, loading]);
 
   return (
     <View style={styles.container}>

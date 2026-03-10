@@ -22,7 +22,7 @@ EduBridge rebuilt with **React Native** and **Expo**, keeping all features from 
    npm install
    ```
 
-2. (Optional) Configure Supabase: edit `src/utils/supabase.ts` if you use a different project or env vars.
+2. (Optional) Supabase env: copy `.env.example` to `.env` and set `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` if you use a different project. If not set, the app uses the same project as the web app.
 
 3. Run the app:
 
@@ -32,13 +32,22 @@ EduBridge rebuilt with **React Native** and **Expo**, keeping all features from 
 
    Then press `a` for Android, `i` for iOS, or `w` for web.
 
-## OAuth (Google/Facebook)
+## Login: "Invalid login credentials"
 
-For OAuth to work on device:
+If signup works but login says **Invalid login credentials**, Supabase is likely requiring **email confirmation**. Do this:
 
-- In Supabase Dashboard, add your redirect URL (e.g. `edubridge://auth/callback` for deep link).
-- Configure the same scheme in `app.json` (`scheme: "edubridge"`).
-- Set up Google/Facebook providers in Supabase Auth and add the app’s bundle ID / package name.
+1. **Confirm your email** – Open the confirmation email from signup and tap the link. That signs you in and activates the account.
+2. **Then log in** – Use the same email and password on the Login screen.
+
+You can also tap **Resend confirmation email** on the login screen (shown when that error appears) to get a new link.
+
+## Auth: Email confirmation and OAuth
+
+- **Redirect URLs (required for email confirm + OAuth):** In [Supabase Dashboard](https://supabase.com/dashboard) → Authentication → URL Configuration, add:
+  - `edubridge://auth/callback`
+  - (Optional for web) Your web origin, e.g. `https://yourdomain.com`
+- **Email confirmation:** Enable “Confirm email” in Authentication → Providers → Email. After sign up, users get a confirmation email; tapping the link opens the app and signs them in.
+- **OAuth (Google/Facebook):** Add the same redirect URL above, then configure each provider in Auth → Providers with your app’s bundle ID / package name.
 
 ## Project structure
 
