@@ -1,0 +1,159 @@
+/* Theme Variables */
+
+/* Light Mode (Default) - Premium Luxury Theme */
+:root,
+[data-theme="light"] {
+  --bg-primary: 255, 255, 255; /* white */
+  --bg-secondary: 249, 250, 251; /* gray-50 */
+  --bg-tertiary: 243, 244, 246; /* gray-100 */
+  --bg-gradient-from: 245, 243, 255; /* purple-50 */
+  --bg-gradient-to: 254, 252, 232; /* amber-50 */
+  
+  --text-primary: 17, 24, 39; /* gray-900 */
+  --text-secondary: 75, 85, 99; /* gray-600 */
+  --text-tertiary: 156, 163, 175; /* gray-400 */
+  
+  --border-primary: 229, 231, 235; /* gray-200 */
+  --border-secondary: 243, 244, 246; /* gray-100 */
+  
+  --accent-primary: 139, 92, 246; /* purple-500 - luxury purple */
+  --accent-secondary: 217, 119, 6; /* amber-600 - luxury gold */
+  --accent-hover: 124, 58, 237; /* purple-600 */
+  
+  --success: 34, 197, 94; /* green-500 */
+  --warning: 234, 179, 8; /* yellow-500 */
+  --error: 239, 68, 68; /* red-500 */
+  
+  --card-bg: 255, 255, 255;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 0 0 1px rgb(139 92 246 / 0.05);
+  
+  --luxury-gradient: linear-gradient(135deg, #8b5cf6 0%, #d97706 100%);
+  --luxury-glow: 0 0 40px rgba(139, 92, 246, 0.3);
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: 17, 24, 39; /* gray-900 */
+  --bg-secondary: 31, 41, 55; /* gray-800 */
+  --bg-tertiary: 55, 65, 81; /* gray-700 */
+  --bg-gradient-from: 30, 41, 59; /* slate-800 */
+  --bg-gradient-to: 30, 27, 75; /* indigo-950 */
+  
+  --text-primary: 243, 244, 246; /* gray-100 */
+  --text-secondary: 209, 213, 219; /* gray-300 */
+  --text-tertiary: 156, 163, 175; /* gray-400 */
+  
+  --border-primary: 55, 65, 81; /* gray-700 */
+  --border-secondary: 75, 85, 99; /* gray-600 */
+  
+  --accent-primary: 96, 165, 250; /* blue-400 */
+  --accent-secondary: 59, 130, 246; /* blue-500 */
+  --accent-hover: 147, 197, 253; /* blue-300 */
+  
+  --success: 74, 222, 128; /* green-400 */
+  --warning: 250, 204, 21; /* yellow-400 */
+  --error: 248, 113, 113; /* red-400 */
+  
+  --card-bg: 31, 41, 55;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+}
+
+/* Chocolate Mode */
+[data-theme="chocolate"] {
+  --bg-primary: 68, 51, 41; /* brown-900 */
+  --bg-secondary: 87, 62, 45; /* brown-800 */
+  --bg-tertiary: 120, 82, 56; /* brown-700 */
+  --bg-gradient-from: 92, 64, 51; /* chocolate brown */
+  --bg-gradient-to: 61, 37, 20; /* dark chocolate */
+  
+  --text-primary: 255, 250, 240; /* cream */
+  --text-secondary: 255, 235, 205; /* light cream */
+  --text-tertiary: 210, 180, 140; /* tan */
+  
+  --border-primary: 120, 82, 56; /* brown-700 */
+  --border-secondary: 140, 100, 70; /* brown-600 */
+  
+  --accent-primary: 245, 158, 11; /* amber-500 */
+  --accent-secondary: 251, 191, 36; /* amber-400 */
+  --accent-hover: 217, 119, 6; /* amber-600 */
+  
+  --success: 132, 204, 22; /* lime-500 */
+  --warning: 251, 191, 36; /* amber-400 */
+  --error: 239, 68, 68; /* red-500 */
+  
+  --card-bg: 87, 62, 45;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+}
+
+/* Pink Mode */
+[data-theme="pink"] {
+  --bg-primary: 253, 242, 248; /* pink-50 */
+  --bg-secondary: 252, 231, 243; /* pink-100 */
+  --bg-tertiary: 251, 207, 232; /* pink-200 */
+  --bg-gradient-from: 252, 231, 243; /* pink-100 */
+  --bg-gradient-to: 250, 232, 255; /* purple-100 */
+  
+  --text-primary: 131, 24, 67; /* pink-900 */
+  --text-secondary: 159, 18, 57; /* pink-800 */
+  --text-tertiary: 190, 24, 93; /* pink-700 */
+  
+  --border-primary: 251, 207, 232; /* pink-200 */
+  --border-secondary: 249, 168, 212; /* pink-300 */
+  
+  --accent-primary: 236, 72, 153; /* pink-500 */
+  --accent-secondary: 249, 168, 212; /* pink-300 */
+  --accent-hover: 219, 39, 119; /* pink-600 */
+  
+  --success: 34, 197, 94; /* green-500 */
+  --warning: 234, 179, 8; /* yellow-500 */
+  --error: 239, 68, 68; /* red-500 */
+  
+  --card-bg: 255, 255, 255;
+  --card-shadow: 0 1px 3px 0 rgb(236 72 153 / 0.1), 0 1px 2px -1px rgb(236 72 153 / 0.1);
+}
+
+/* Utility Classes */
+.theme-bg-primary {
+  background-color: rgb(var(--bg-primary));
+}
+
+.theme-bg-secondary {
+  background-color: rgb(var(--bg-secondary));
+}
+
+.theme-bg-tertiary {
+  background-color: rgb(var(--bg-tertiary));
+}
+
+.theme-text-primary {
+  color: rgb(var(--text-primary));
+}
+
+.theme-text-secondary {
+  color: rgb(var(--text-secondary));
+}
+
+.theme-text-tertiary {
+  color: rgb(var(--text-tertiary));
+}
+
+.theme-border-primary {
+  border-color: rgb(var(--border-primary));
+}
+
+.theme-accent-primary {
+  background-color: rgb(var(--accent-primary));
+}
+
+.theme-accent-hover:hover {
+  background-color: rgb(var(--accent-hover));
+}
+
+.theme-card {
+  background-color: rgb(var(--card-bg));
+  box-shadow: var(--card-shadow);
+}
+
+.theme-gradient {
+  background: linear-gradient(to bottom right, rgb(var(--bg-gradient-from)), rgb(var(--bg-gradient-to)));
+}
